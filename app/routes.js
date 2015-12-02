@@ -96,6 +96,7 @@ module.exports = function(app) {
         
     });
     
+    //set new password
     app.get('/newp',function(req,res){
        //req.query.username
        
@@ -257,7 +258,7 @@ module.exports = function(app) {
         
     });
     
-    
+    // to verify the email address . link becomes useless/expires in 5 mins 
     app.get('/verify',function(req,res){
         console.log(req.protocol + ":/" + req.get('host'));
          
