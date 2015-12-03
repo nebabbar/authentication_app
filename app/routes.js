@@ -3,7 +3,7 @@
 var database = require('/home/neerajbabbar/sample_app/config/database.js');
 var nodemailer = require('nodemailer');
 var mysql      = require('mysql');
-var connection = mysql.createConnection({
+var connection = mysql.createConnection({ // use config for all private things like (password, username);
   host     : 'localhost',
   user     : 'root',
   password : 'paytm@197',
@@ -13,14 +13,16 @@ var connection = mysql.createConnection({
 var smtpTransport = nodemailer.createTransport("SMTP",{
     service: "Gmail",
     auth: {
-        user: "neerajbabbar90@gmail.com",
+        user: "neerajbabbar90@gmail.com", //here too 
         pass: "mr.potter-90"
     }
 });
 var rand,mailOptions,host,link;
 
 module.exports = function(app) {
-
+  // dont write all your code in router itself 
+  // only routes need to be written here 
+  // for reference look at market-cart/v1/mobile/index.js
     app.get('/', function(req, res) {
         res.render('index.ejs'); // load the index.ejs file
     });
@@ -28,7 +30,7 @@ module.exports = function(app) {
     
     app.get('/profile', function(req, res) {
 
-        console.log("cookie:" +req.cookies.username);
+        console.log("cookie:" +req.cookies.username); // use session -> require(express-session) 
         if(req.cookies.username){
         res.render('profile.ejs' ); 
         }else{
@@ -49,7 +51,6 @@ module.exports = function(app) {
     });
     
     app.post('/forgot',function(req,res){
-        
         connection.query("select * from users where username = '"+req.body.email+"'",function(err,rows,fields){
             if(!err){
                 if(rows.length>0){
@@ -154,7 +155,7 @@ module.exports = function(app) {
 
     // process the login form
     app.post('/login', function(req,res){
-        
+        // use parameterized query
      connection.query('SELECT * from users where username = "'+req.body.email+'" and password = "'+req.body.password+'"', function(err, rows, fields) {
     if (!err)
       { 
@@ -217,9 +218,10 @@ module.exports = function(app) {
             }else{
                 
                // connection.connect();
-              
+              // crypto best fit here (generate hash , encrypt , decrypt)
              rand=Math.floor((Math.random() * 100) + 54); 
-                
+            // save decrypted password into databases
+            //also share db schema
             connection.query('Insert into users(username,password,rand) values ("'+req.body.email +'","'+req.body.password+'","'+rand+'")',
             function(err,res){
             if(!err){
@@ -261,7 +263,7 @@ module.exports = function(app) {
     // to verify the email address . link becomes useless/expires in 5 mins 
     app.get('/verify',function(req,res){
         console.log(req.protocol + ":/" + req.get('host'));
-         
+         // parametizered 
             connection.query('SELECT * from users where username = "'+req.query.username+'"', function(err, rows, fields) {
             if (!err)
                 { 
